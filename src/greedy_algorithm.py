@@ -10,13 +10,13 @@ def greedy_algorithm(T, N, n, p):
     for i in range(N):
         for j in range(T):
             if solution.x[j] < n[j]:
-                A[j] = labs[j].P[solution.x[j]]/(solution.x[j]+1)
+                A[j] = labs[j].P[solution.x[j]+1]/(solution.x[j]+1)
         lab_num = list(A.keys())
         probabilities = list(A.values())
         a = max(probabilities)
-        best = probabilities.index(a)
+        best = lab_num[probabilities.index(a)]
         solution.x[best] += 1
-        solution.z += labs[best].P[solution.x[best]-1]
+        solution.increase_z(labs[best].P[solution.x[best]])
         A.clear()
     return solution
 
