@@ -1,2 +1,4 @@
 __pycache__
 src/figures
+.DS_Store
+src/.DS_Store
