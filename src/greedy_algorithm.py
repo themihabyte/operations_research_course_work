@@ -17,6 +17,7 @@ def greedy_algorithm(T, N, n, p):
         solution.x[best] += 1
         A.clear()
     solution.calculate_z()
+    Solution.labs.clear()
     return solution
 
 if __name__ == "__main__":

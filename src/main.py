@@ -1,5 +1,6 @@
 from genetic_algorithm import genetic_algorithm
-from branches_method import branches_method
+from branches_method import main as branches_method
+import experiments
 import csv
 import random
 def user_input():
@@ -50,7 +51,24 @@ n_lower_bound, n_upper_bound, p_lower_bound, p_upper_bound):
     return T, N, n, p
 
 def run_experiments():
-    pass
+    print("""Choose experiment:
+        1) Population size (genetic algorithm)
+        2) Iterations amount (genetic algrithm)
+        3) Comparing algorithms
+        4) Run all""")
+    menu = int(input())
+    if menu == 1:
+        experiments.population_size()
+    elif menu == 2:
+        experiments.iterations()
+    elif menu == 3:
+        experiments.compare_algorithms()
+    elif menu == 4:
+        experiments.population_size()
+        experiments.iterations()
+        experiments.compare_algorithms()
+    else:
+        print("Try again")
 
 def input_problem():
     T = 0
@@ -65,6 +83,7 @@ def input_problem():
     if menu == 1:
         T, N, n, p = user_input()
     elif menu == 2:
+        print("Be ware that it is not recommended to input N >= 19")
         print("Input lower bound for T")
         T_lower = int(input())
         print("Input upper bound for T")
@@ -88,7 +107,7 @@ def input_problem():
         filename = input()
         T, N, n, p = read_from_file(filename)
     print("T =", T, "\nN =", N, "\nn =", n, "\np =", p)
-    res = genetic_algorithm(T, N, n, p, 5, 1000)  # TODO: Change parameters
+    res = genetic_algorithm(T, N, n, p, N/2, 20)  # TODO: Change parameters
     print("Genetic algorithm: ", res[len(res)-1])
     print("Branches method: ", branches_method(T, N, n, p))
 
