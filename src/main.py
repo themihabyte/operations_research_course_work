@@ -55,7 +55,7 @@ def run_experiments():
     print("""Choose experiment:
         1) Population size (genetic algorithm)
         2) Iterations amount (genetic algrithm)
-        3) Comparing algorithms
+        3) Algorithms comparison
         4) Run all""")
     menu = int(input())
     if menu == 1:
@@ -82,6 +82,7 @@ def input_problem():
         3) read data from file""")
     menu = int(input())
     if menu == 1:
+        print("Be ware that it is not recommended to input N >= 19")
         T, N, n, p = user_input()
     elif menu == 2:
         print("Be ware that it is not recommended to input N >= 19")

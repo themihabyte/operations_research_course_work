@@ -101,8 +101,9 @@ def population_size():
                     C_opt = C
                     time_opt = working_time
             with open("experiments/population_size.csv", 'a', encoding='utf-8-sig') as f:
-                writer = csv.writer(f)
-                writer.writerow((T, N, C_opt))
+                if (C_opt != 0):
+                    writer = csv.writer(f)
+                    writer.writerow((T, N, C_opt))
     print("Iterations experiment finished.")
 
 def compare_algorithms():
