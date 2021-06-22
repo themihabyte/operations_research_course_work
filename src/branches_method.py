@@ -2,118 +2,80 @@ import csv
 from Solution_class import Solution
 from Lab_work_class import Lab_work
 
-
-def solution_matrixes(T, n, p):
+def main(T, N, n, p):
+    Solution.labs = []
     for i in range(T):
         Solution.labs.append(Lab_work(p[i], n[i]))
-    solution = Solution(T)
-    return solution
+    L = calculate_probability_by_attempt(Solution.labs)
+    A = {}
+    record = Solution(T)
+    for el in L.copy():
+        if(el[1]>N):
+            del L[el]
+    solution, record = branches_method(A, L, Solution(T), record, N)
+    Solution.labs.clear()
+    return record
 
+def branches_method(taken_list, not_taken_list, current_solution, record, possible_attempts):
+    if current_solution.z < record.z:
+        return record, record
+    if len(not_taken_list) == 0 or possible_attempts == 0:
+        return current_solution, current_solution
 
-# матриця імовірностей здачі i-тої ЛР з j-ї спроби
-def prob_matrix(T, n, p):
-    pr = []
-    for i in range(T):
-        pr.append([])
-        for j in range(max(n)):
-            if j + 1 <= n[i]:
-                pr[i].append(1 - (1 - p[i]) ** (j + 1))
-            else:
-                pr[i].append(0)
-    return pr
+    b = not_taken_list.popitem()
+    taken_list_l = taken_list.copy()
+    not_taken_list_l = not_taken_list.copy()
+    taken_list_l[b[0]] = b[1]
+    for i in range(1, b[0][1]):
+        del not_taken_list_l[(b[0][0], i)]
+    
+    solution_l = Solution(len(Solution.labs))
+    solution_l.z = sum(taken_list_l.values())
+    for el in taken_list_l:
+        solution_l.x[el[0]] = el[1]
+    possible_attempts_l = possible_attempts - b[0][1]
 
-
-# розрахувати сумарні ймовірності здачі від спроби
-def sumprob_list(T, n, pr):
-    sumpr = []
-    sum = 0
-    for i in range(T):
-        for j in range(n[i]):
-            sum += pr[i][j]
-            sumpr.append({"lab": i + 1, "attempt": j + 1, "probability": sum})
-        sum = 0
-
-    sumpr.sort(key=lambda x: x['probability'], reverse=True)
-
-    return sumpr
-
-
-def get_sum_of_maximums(prob_list, quantity):
-    sum = 0
-
-    for i in range(quantity):
-        curr_lab = list(filter(lambda x: x['lab'] == i + 1, prob_list))
-        if len(curr_lab) != 0:
-            max_prob = max(curr_lab, key=lambda x: x['probability'])
-            sum += max_prob["probability"]
-    return sum
-
-
-def get_sum_of_probs(prob_list):
-    sum = 0
-    for i in range(len(prob_list)):
-        sum += prob_list[i]["probability"]
-    return sum
-
-
-def branches_method(sum_prob_list, attempt_quantity, labs_quantity, included_probs_list=[], record=0, side='center',
-                    step=1):
-    print('-----------------------------------------------------------------------------------------------------------')
-    print('side:', side, '| step:', step)
-    print('A: ', included_probs_list)
-    print('B: ', sum_prob_list)
-    print('U:', attempt_quantity)
-
-    if attempt_quantity == 0 or len(sum_prob_list) == 0:
-        print('--returning😎', get_sum_of_probs(included_probs_list))
-
-        return get_sum_of_probs(included_probs_list)
-
-    else:
-
-        max_prob = sum_prob_list.pop(0)
-
-        # left_side
-        left_attempt_quantity = attempt_quantity - max_prob['attempt']
-        left_sum_prob_list = list(
-            filter(lambda prob: prob['lab'] != max_prob['lab'] and prob['attempt'] <= left_attempt_quantity,
-                   sum_prob_list))
-        left_included_probs_list = [*included_probs_list, max_prob]
-
-        left_result = get_sum_of_probs(left_included_probs_list) + get_sum_of_maximums(left_sum_prob_list,
-                                                                                       labs_quantity - 1)
-
-        print('left: ', left_result)
-
-        # right side
-        right_attempt_quantity = attempt_quantity
-        right_sum_prob_list = [*sum_prob_list]
-        right_included_probs_list = [*included_probs_list]
-        right_result = get_sum_of_probs(right_included_probs_list) + get_sum_of_maximums(right_sum_prob_list,
-                                                                                         labs_quantity)
-        print('right: ', right_result)
-
-        if right_result < record:
-            return branches_method(left_sum_prob_list, left_attempt_quantity, labs_quantity - 1,
-                                   left_included_probs_list, left_result, 'left', step + 1)
+    for el in not_taken_list_l.copy():
+        if el[1] > possible_attempts_l:
+            del not_taken_list_l[el]
         else:
-            left = branches_method(left_sum_prob_list, left_attempt_quantity, labs_quantity - 1,
-                                   left_included_probs_list, left_result, 'left', step + 1)
-            right = branches_method(right_sum_prob_list, right_attempt_quantity, labs_quantity,
-                                    right_included_probs_list, right_result, 'right', step + 1)
+            solution_l.z += not_taken_list_l[el]
+    solution_l, record = branches_method(taken_list_l,
+    not_taken_list_l, solution_l, record, possible_attempts_l)
 
-            if left > right:
-                return left
-            else:
-                return right
 
+    taken_list_r = taken_list.copy()
+    not_taken_list_r = not_taken_list.copy()
+    solution_r = Solution(len(Solution.labs))
+    solution_r.z += sum(taken_list_r.values())
+    solution_r.z += sum(not_taken_list_r.values())
+    possible_attempts_r = possible_attempts
+    
+    solution_r, record = branches_method(taken_list_r, not_taken_list_r,
+    solution_r, record, possible_attempts_r)
+
+    if solution_l.z > solution_r.z:
+        return solution_l, record
+    else:
+        return solution_r, record
+
+def calculate_probability_by_attempt(labs):
+    L = {}
+    for i in range(len(labs)):
+        for j in range(1, labs[i].n+1):
+            L[(i, j)] = sum(labs[i].P[:j+1])
+    L_sorted = sorted(L.items(), key = lambda x: x[1])
+    L.clear()
+    for el in L_sorted:
+        L[el[0]] = el[1]
+    return L
 
 if __name__ == "__main__":
-    T = 0
-    N = 0
     n = []
     p = []
-    with open("problems.csv", 'r', encoding='utf-8-sig') as csvfile:
+    T = 0 
+    N = 0
+    with open("src/problems.csv", 'r', encoding='utf-8-sig') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             if T == 0:
@@ -122,8 +84,4 @@ if __name__ == "__main__":
             else:
                 n.append(int(row[0]))
                 p.append(float(row[1]))
-
-    all_prob_matrix = prob_matrix(T, n, p)
-    sum_prob_list = sumprob_list(T, n, all_prob_matrix)
-    result = branches_method(sum_prob_list, N, T)
-    print(result)
+    print(main(T, N, n, p))
