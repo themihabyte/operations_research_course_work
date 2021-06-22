@@ -1,5 +1,6 @@
 from genetic_algorithm import genetic_algorithm
 from branches_method import main as branches_method
+from greedy_algorithm import greedy_algorithm
 import experiments
 import csv
 import random
@@ -108,6 +109,7 @@ def input_problem():
         T, N, n, p = read_from_file(filename)
     print("T =", T, "\nN =", N, "\nn =", n, "\np =", p)
     res = genetic_algorithm(T, N, n, p, N/2, 20)  # TODO: Change parameters
+    print("Greedy algorithm: ", greedy_algorithm(T, N, n, p))
     print("Genetic algorithm: ", res[len(res)-1])
     print("Branches method: ", branches_method(T, N, n, p))
 
