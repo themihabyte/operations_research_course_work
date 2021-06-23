@@ -109,7 +109,7 @@ def input_problem():
         filename = input()
         T, N, n, p = read_from_file(filename)
     print("T =", T, "\nN =", N, "\nn =", n, "\np =", p)
-    res = genetic_algorithm(T, N, n, p, N/2, 20)  # TODO: Change parameters
+    res = genetic_algorithm(T, N, n, p, -0.026*N+31, 20)
     print("Greedy algorithm: ", greedy_algorithm(T, N, n, p))
     print("Genetic algorithm: ", res[len(res)-1])
     print("Branches method: ", branches_method(T, N, n, p))

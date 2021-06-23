@@ -47,7 +47,7 @@ def iterations():
             C_solution = []
             for C in [20, 50, 100, 1000]:
                 start_time = datetime.datetime.now()
-                solution = genetic_algorithm(T, N, n, p, N/2, C)
+                solution = genetic_algorithm(T, N, n, p, -0.026*N+31, C)
                 end_time = datetime.datetime.now()
                 time_diff = end_time - start_time
                 working_time = time_diff.total_seconds() * 1000
@@ -139,7 +139,7 @@ def compare_algorithms():
                 grwt.append(working_time_greedy)
                 
                 start_time_genetic = datetime.datetime.now()
-                res_genetic_list = genetic_algorithm(T, N, n, p, N/2, 20)
+                res_genetic_list = genetic_algorithm(T, N, n, p, -0.026*N+31, 20)
                 res_genetic = res_genetic_list[len(res_genetic_list)-1]
                 end_time_genetic = datetime.datetime.now()
                 time_diff_genetic = end_time_genetic - start_time_genetic
