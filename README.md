@@ -1,7 +1,7 @@
 # Operations research course work
 ## Problem statement
-A student in the last week of the semester has to pass *T* lab works (LW) in the "Cognitive technologies" course. The one has *N* attempts to do it (*N*>*T*). The amount of attempts, in which the one has to pass the LW number *i* is restricted by the number ![](http://www.sciweavers.org/upload/Tex2Img_1622556208/render.png) , ![](http://www.sciweavers.org/upload/Tex2Img_1622556269/render.png).<br>
-The orobability to pass the LW number *i* with attempt number *j* equals to: ![](https://bit.ly/3fGfgQG)<br>
+A student in the last week of the semester has to pass *T* lab works (LW) in the "Cognitive technologies" course. The one has *N* attempts to do it (*N*>*T*). The amount of attempts, in which the one has to pass the LW #*i* is restricted by the number ![](http://www.sciweavers.org/upload/Tex2Img_1622556208/render.png) , ![](http://www.sciweavers.org/upload/Tex2Img_1622556269/render.png).<br>
+The probability to pass the LW #*i* with attempt #*j* equals to: ![](https://bit.ly/3fGfgQG)<br>
 Distribute *N* attempts between *T* lab works so that the sum of the relative probabilities for all of the lab works is **maximal**.
 
 # Курсова робота з предмету Дослідження операцій
